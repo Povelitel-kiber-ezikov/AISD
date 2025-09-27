@@ -98,8 +98,70 @@ public:
 		}
 
 	}
+
+	Polyline(const Polyline& other) : _size(other._size), _capacity(other._capacity) {
+		_points = new Point<T>[_capacity];
+		
+		for (int i = 0; i < _size; ++i) {
+			_points[i] = other._points[i]
+		}
+	}
+
+
+	Point<T>& operator[](size_t index) {
+		if (index < 0 or index >= _size) {
+			throw std::out_of_range("index out of range");
+		}
+
+		return _points[index];
+	}
+
+	Polyline operator+(const Polyline& other) const {
+		Polyline result(*this);
+
+		result.resize(_size + other._size);
+
+
+		for (int i = 0; i < other._size; ++i) {
+			_points[_size + i] = other._points[i];
+		}
+		
+		result._size += other._size;
+	}
+	
+	Polyline operator+(const Point<T>& point) const {
+		Polyline result(*this);
+
+		if (result._capacity = result._size) {
+			result.resize(_capacity + 1);
+		}
+
+		result[_size] = point;
+
+		result._size ++;
+	}
+
+	friend Polyline<T> operator+(const Point<T>& point, const Polyline<T>& poly);
+
+
 };
 
+
+template <typename T>
+Polyline<T> operator+(const Point<T>& point, const Polyline<T>& poly) {
+	Polyline result(poly);
+
+	if (result._capacity = result._size) {
+		result.resize(_capacity + 1);
+	}
+
+	result[0] = point;
+	for (int i = 0; i < result._size; ++i) {
+		result._points[o + i] = poly._points[i];
+	}
+
+	result._size++;
+}
 
 int main() {
 	Polyline<int> p1(5);
