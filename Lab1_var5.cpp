@@ -6,6 +6,7 @@
 #include <cmath>
 #include <complex>
 #include <type_traits>
+#include <iomanip>
 
 
 
@@ -154,23 +155,6 @@ public:
 	}
 
 
-	Polyline(size_t n,const  double radius): _size(n), _capacity(n) {
-		_points = new Point<T>[n];
-		const double central_x = 0;
-		const double central_y = 0;
-		//const double radius = 5;
-		const double central_angle = (2.0 * M_PI) / double(n);
-
-		for (int i = 0; i < n; ++i) {
-			double angle = i * central_angle;
-			double x = central_x + radius * std::cos(angle);
-			double y = central_y + radius * std::sin(angle);
-
-			
-			_points[i] = Point<T>(static_cast<T>(x), static_cast<T>(y));
-			
-		}
-	}
 
 
 	Point<T>& operator[](size_t index) const {
@@ -296,14 +280,41 @@ std::ostream& operator<<(std::ostream& os, const Polyline<T>& poly) {
 }
 
 
+template <typename T>
+Polyline<T> build_n_angle(size_t n, double radius) {
+	Polyline<T> poly(n);
+	const double central_x = 0;
+	const double central_y = 0;
+	//const double radius = 5;
+	const double central_angle = (2.0 * M_PI) / double(n);
+
+	for (int i = 0; i < n; ++i) {
+		double angle = i * central_angle;
+		double x = central_x + radius * std::cos(angle);
+		double y = central_y + radius * std::sin(angle);
+
+
+		poly[i] = Point<T>(static_cast<T>(x), static_cast<T>(y));
+
+	}
+	return poly;
+}
+
+
 int main() {
 	try {
-		Polyline<int> p1(4, 5);
-		Point<int> po1(2, 2);
+		std::cout << std::fixed << std::setprecision(3);
+		Polyline<double> p1(Point<double>(1.5, 2.0));
+		Polyline<double> p2(3);
+		Polyline<double> p3(3, 1.0, 100.0);
+		Polyline<double> p4 = p1;
+		Polyline<double> p5 = build_n_angle<double>(3, 5);
 
-		//Polyline<int> p3 = p1 + po1;
-
-		std::cout << p1;
+		std::cout << p1 << std::endl;
+		std::cout << p2 << std::endl;
+		std::cout << p3 << std::endl;
+		std::cout << p4 << std::endl;
+		std::cout << p5 << std::endl;
 	}
 	catch (const std::exception& e) {
 		std::cerr << e.what() << std::endl;
