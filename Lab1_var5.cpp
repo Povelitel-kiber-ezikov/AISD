@@ -1,4 +1,6 @@
-﻿#include <iostream>
+﻿#define _USE_MATH_DEFINES
+
+#include <iostream>
 #include <stdexcept>
 #include <random>
 #include <cmath>
@@ -7,8 +9,9 @@
 
 
 
+
 template <typename T>
-struct Point{
+class Point{
 private:
 	T x, y;
 	static const double EPSILON;
@@ -18,8 +21,8 @@ public:
 	Point() : x(0), y(0) {}; 
 	Point(T x, T y) : x(x), y(y) {}; 
 
-	T getX() const { return x; }
-	T getY() const { return y; }
+	T get_x() const { return x; }
+	T get_y() const { return y; }
 
 	bool operator==(const Point& other) const {
 		if constexpr (std::is_floating_point_v<T>) {
@@ -43,6 +46,14 @@ public:
 		return !(*this == other);
 	}
 };
+
+template <typename T>
+std::ostream& operator<<(std::ostream& os, const Point<T>& point) {
+	os << "(" << point.get_x() << ", " << point.get_y() << ")";
+
+	return os;
+}
+
 
 template <typename T>
 const double Point<T>::EPSILON = pow(10, -7);
@@ -143,7 +154,26 @@ public:
 	}
 
 
-	Point<T>& operator[](size_t index) {
+	Polyline(size_t n,const  double radius): _size(n), _capacity(n) {
+		_points = new Point<T>[n];
+		const double central_x = 0;
+		const double central_y = 0;
+		//const double radius = 5;
+		const double central_angle = (2.0 * M_PI) / double(n);
+
+		for (int i = 0; i < n; ++i) {
+			double angle = i * central_angle;
+			double x = central_x + radius * std::cos(angle);
+			double y = central_y + radius * std::sin(angle);
+
+			
+			_points[i] = Point<T>(static_cast<T>(x), static_cast<T>(y));
+			
+		}
+	}
+
+
+	Point<T>& operator[](size_t index) const {
 		if (index >= _size)
 			throw std::out_of_range("index out of range");
 
@@ -171,7 +201,7 @@ public:
 			result.resize(_capacity + 1);
 		}
 
-		result[_size] = point;
+		result._points[_size] = point;
 
 		result._size++;
 		return result;
@@ -193,10 +223,10 @@ public:
 
 
 			if constexpr (std::is_same_v<T, std::complex<float>> || std::is_same_v<T, std::complex<double>>) {
-				length += std::sqrt(std::norm(p2.getX() - p1.getX()) + std::norm(p2.getY() - p1.getY()));
+				length += std::sqrt(std::norm(p2.get_x() - p1.get_x()) + std::norm(p2.get_y() - p1.get_y()));
 			}
 			else {
-				length += std::sqrt(std::pow(p2.getX() - p1.getX(), 2) + std::pow(p2.getY() - p1.getY(), 2));
+				length += std::sqrt(std::pow(p2.get_x() - p1.get_x(), 2) + std::pow(p2.get_y() - p1.get_y(), 2));
 			}
 		}
 		return length;
@@ -236,11 +266,12 @@ public:
 		_size++;
 	}
 
-
+	size_t get_size() const {
+		return _size;
+	}
 
 
 };
-
 
 
 template <typename T>
@@ -250,13 +281,31 @@ Polyline<T> operator+(const Point<T>& point, const Polyline<T>& poly) {
 	return result;
 }
 
+template <typename T>
+std::ostream& operator<<(std::ostream& os, const Polyline<T>& poly) {
+	size_t size = poly.get_size();
+	os << "size = " << size << ": ";
+	for (int i = 0; i < size; i++) {
+		os << poly[i];
+		if (i + 1 != size) {
+			os << " - ";
+		}
+	}
+
+	return os;
+}
 
 
 int main() {
-	Polyline<int> p1(Point<int>(1, 1));
-	Point<int> po1(2, 2);
+	try {
+		Polyline<int> p1(4, 5);
+		Point<int> po1(2, 2);
 
-	Polyline<int> p3 = po1 + p1;
+		//Polyline<int> p3 = p1 + po1;
 
-	std::cout << p3.length();
+		std::cout << p1;
+	}
+	catch (const std::exception& e) {
+		std::cerr << e.what() << std::endl;
+	}
 }
