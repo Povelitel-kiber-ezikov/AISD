@@ -40,7 +40,7 @@ public:
 	bool operator!=(const Point& other) const {
 		return !(*this == other);
 	}
-};timyrlox
+};
 
 
 template <typename T>
