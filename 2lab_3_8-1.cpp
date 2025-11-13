@@ -177,10 +177,10 @@ public:
 
     //добавление списка в хвост
     void push_tail(const LinkedList<T>& other){
-        if(other.size_list == 0){ //добавляемый список пуст
+        if(other.size_list == 0){ 
             return;
         }
-        if(size_list == 0){ //оригинальный пуст
+        if(size_list == 0){ 
             size_list = other.size_list;
         
             head = new Node<T>(other.head -> data);
@@ -331,7 +331,7 @@ public:
     
         // проверка тела
         Node<T>* node_to_check = head;
-        for(int i = 0; i < size_list - 1; ++i){
+        while(node_to_check -> next != head){
             if(node_to_check -> next -> data == value){
                 Node<T>* delete_node = node_to_check -> next;
 
@@ -349,24 +349,11 @@ public:
                     count_delete++;
                 }
             }
+            else{
+                node_to_check = node_to_check -> next;
+            }
         }
         size_list -= count_delete;
-    }
-
-
-    bool check_repetitions(const T value){
-        Node<T>* node = head;
-        int count = 0;
-        for(int i = 0; i < size_list; ++i){
-            if(node -> data == value){
-                count++;
-            }
-            node = node -> next;
-        }
-        if(count > 1){
-            return true;
-        }
-        return false;
     }
 
 
@@ -380,11 +367,11 @@ std::ostream& operator<<(std::ostream& os, const LinkedList<T>& list){
         return os;
     }
 
-    os << "[";
+    os << "[-> ";
     Node<T>* current = list.head;
     for(int i = 0; i < list.size_list; ++i){
         os << current->data;
-        if(i < list.size_list - 1){
+        if(i < list.size_list){
             os << " -> ";
         }
         current = current->next;
@@ -420,13 +407,13 @@ LinkedList<T> combining_lists(const LinkedList<T>& list1,const LinkedList<T>& li
         temporary_res.push_tail(list1[i]);
     }
 
-    //добавление второго списка
+    
     for(size_t i = 0; i < list2.get_size(); ++i){
         temporary_res.push_tail(list2[i]);
     }
 
     sort_list(temporary_res);
-    //удаление дубликатов
+    
     for(size_t i = 0; i < temporary_res.get_size(); ++i){
         if(i == 0 || temporary_res[i] != temporary_res[i - 1]){
             result.push_tail(temporary_res[i]);
@@ -439,5 +426,181 @@ LinkedList<T> combining_lists(const LinkedList<T>& list1,const LinkedList<T>& li
 }
 
 int main(){
+
+    LinkedList<int> list166;
+    list166.push_tail(1);
+    list166.push_tail(1);
+    list166.push_tail(1);
+    list166.push_tail(1);
+    list166.push_tail(2);
+    list166.push_tail(1);
+    list166.push_tail(1);
+    list166.push_tail(3);
+    list166.push_tail(3);
+    list166.push_tail(1);
+    list166.push_tail(1);
+    list166.push_tail(1);
+
+    std::cout << list166 << std::endl;
+    list166.delete_node(1);
+    std::cout << list166 << std::endl << list166.get_size();
+
+
+
+    // std::cout << "=== DEMONSTRATING CONSTRUCTORS ===" << std::endl << std::endl;
     
+    // // Constructor 1: empty constructor
+    // std::cout << "1. Empty constructor:" << std::endl;
+    // LinkedList<int> list1;
+    // std::cout << "list1 = " << list1 << ", size = " << list1.get_size() << std::endl << std::endl;
+    
+    // // Constructor 2: with size parameter (random numbers)
+    // std::cout << "2. Constructor with size (5 random elements):" << std::endl;
+    // LinkedList<float> list2(5);
+    // std::cout << "list2 = " << list2 << ", size = " << list2.get_size() << std::endl << std::endl;
+    
+    // // Constructor 3: copy constructor
+    // std::cout << "3. Copy constructor:" << std::endl;
+    // LinkedList<float> list3 = list2;
+    // std::cout << "list3 (copy of list2) = " << list3 << ", size = " << list3.get_size() << std::endl << std::endl;
+
+
+    
+
+
+    // std::cout << "=== DEMONSTRATING push_tail ===" << std::endl << std::endl;
+    
+    // LinkedList<int> list4;
+    // std::cout << "Adding elements to tail:" << std::endl;
+    // list4.push_tail(5);
+    // std::cout << "After push_tail(5): " << list4 << std::endl;
+    // list4.push_tail(15);
+    // std::cout << "After push_tail(15): " << list4 << std::endl;
+    // list4.push_tail(25);
+    // std::cout << "After push_tail(25): " << list4 << std::endl << std::endl;
+
+
+    // std::cout << "=== DEMONSTRATING push_head ===" << std::endl << std::endl;
+    
+    // std::cout << "Adding elements to head:" << std::endl;
+    // list4.push_head(1);
+    // std::cout << "After push_head(1): " << list4 << std::endl;
+    // list4.push_head(0);
+    // std::cout << "After push_head(0): " << list4 << std::endl << std::endl;
+
+
+    // std::cout << "=== DEMONSTRATING pop_head AND pop_tail ===" << std::endl << std::endl;
+    
+    // LinkedList<int> list5;
+    // list5.push_tail(10);
+    // list5.push_tail(20);
+    // list5.push_tail(30);
+    // list5.push_tail(40);
+    // list5.push_tail(50);
+    // std::cout << "Original list: " << list5 << std::endl;
+    
+    // list5.pop_head();
+    // std::cout << "After pop_head(): " << list5 << std::endl;
+    
+    // list5.pop_tail();
+    // std::cout << "After pop_tail(): " << list5 << std::endl << std::endl;
+
+
+    // std::cout << "=== DEMONSTRATING push_tail(LinkedList) ===" << std::endl << std::endl;
+    
+    // LinkedList<int> list6, list7;
+    // list6.push_tail(1);
+    // list6.push_tail(2);
+    // list6.push_tail(3);
+    
+    // list7.push_tail(4);
+    // list7.push_tail(5);
+    
+    // std::cout << "list6 = " << list6 << std::endl;
+    // std::cout << "list7 = " << list7 << std::endl;
+    // list6.push_tail(list7);
+    // std::cout << "After list6.push_tail(list7): " << list6 << std::endl << std::endl;
+
+
+    // std::cout << "=== DEMONSTRATING push_head(LinkedList) ===" << std::endl << std::endl;
+    
+    // LinkedList<int> list8, list9;
+    // list8.push_tail(3);
+    // list8.push_tail(4);
+    // list8.push_tail(5);
+    
+    // list9.push_tail(1);
+    // list9.push_tail(2);
+    
+    // std::cout << "list8 = " << list8 << std::endl;
+    // std::cout << "list9 = " << list9 << std::endl;
+    // list8.push_head(list9);
+    // std::cout << "After list8.push_head(list9): " << list8 << std::endl << std::endl;
+
+
+    // std::cout << "=== DEMONSTRATING delete_node ===" << std::endl << std::endl;
+    
+    // LinkedList<int> list10;
+    // list10.push_tail(5);
+    // list10.push_tail(3);
+    // list10.push_tail(5);
+    // list10.push_tail(7);
+    // list10.push_tail(5);
+    // std::cout << "Original list: " << list10 << std::endl;
+    
+    // list10.delete_node(5);
+    // std::cout << "After delete_node(5): " << list10 << std::endl << std::endl;
+
+
+    // std::cout << "=== DEMONSTRATING check_repetitions ===" << std::endl << std::endl;
+    
+    // LinkedList<int> list11;
+    // list11.push_tail(10);
+    // list11.push_tail(20);
+    // list11.push_tail(10);
+    
+    // std::cout << "list11 = " << list11 << std::endl;
+    // std::cout << "check_repetitions(10): " << (list11.check_repetitions(10) ? "true (duplicates found)" : "false") << std::endl;
+    // std::cout << "check_repetitions(20): " << (list11.check_repetitions(20) ? "true (duplicates found)" : "false") << std::endl << std::endl;
+
+
+    // std::cout << "=== DEMONSTRATING sort_list ===" << std::endl << std::endl;
+    
+    // LinkedList<int> list12;
+    // list12.push_tail(45);
+    // list12.push_tail(12);
+    // list12.push_tail(78);
+    // list12.push_tail(3);
+    // list12.push_tail(56);
+    // std::cout << "Before sorting: " << list12 << std::endl;
+    
+    // sort_list(list12);
+    // std::cout << "After sort_list(): " << list12 << std::endl << std::endl;
+
+
+    // std::cout << "=== DEMONSTRATING combining_lists ===" << std::endl << std::endl;
+    
+    // LinkedList<int> list13, list14;
+    // list13.push_tail(3);
+    // list13.push_tail(1);
+    // list13.push_tail(4);
+    
+    // list14.push_tail(1);
+    // list14.push_tail(5);
+    // list14.push_tail(9);
+    
+    // std::cout << "list13 = " << list13 << std::endl;
+    // std::cout << "list14 = " << list14 << std::endl;
+    
+    // LinkedList<int> combined = combining_lists(list13, list14);
+    // std::cout << "combining_lists(list13, list14) = " << combined << std::endl;
+    // std::cout << "(merging, sorting and removing duplicates)" << std::endl << std::endl;
+
+
+   
+
+
+  
+    
+    return 0;
 }
