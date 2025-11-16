@@ -341,7 +341,7 @@ int main(){
         print_comb_stat(vect1);
         print_heap_stat(vect2);
     }
-
+    //2.в
     for(int size: sizes){
         std::cout << size << std::endl;
         LinkedList<int> list(size, -1);
@@ -359,3 +359,4 @@ int main(){
 
     return 0;
 }
+
