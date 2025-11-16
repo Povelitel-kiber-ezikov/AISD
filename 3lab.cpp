@@ -42,8 +42,40 @@ public:
         }
     }
 
+    LinkedList(size_t count, bool flag){
+        head = new Node<T>(1);
+        Node<T>* cur = head;
+        for(size_t i = 2; i <= count; ++i) {
+            Node<T>* new_node = new Node<T>(i);
+            cur->next = new_node;
+            cur = cur->next;
+        }
+    }
+
+    LinkedList(size_t count, int reverse_flag) {
+
+    head = new Node<T>(count);
+    Node<T>* cur = head;
+    for(size_t i = count - 1; i > 0; --i) {
+        Node<T>* new_node = new Node<T>(i);
+        cur->next = new_node;
+        cur = cur->next;
+    }
+}
+
+
+
     Node<T>*& get_head(){
         return head;
+    }
+
+    ~LinkedList(){
+        Node<T>* cur = head;
+        while(cur != nullptr){
+            Node<T>* next = cur->next;
+            delete cur;
+            cur = next;
+        }
     }
 
     template <typename U>
@@ -237,20 +269,93 @@ stats heap_sort(std::vector<T>& vect){
     return stat;
 }
 
+template <typename T>
+void print_bubble_stat(Node<T>*& head){
+
+    stats stat = bubble_sort(head);
+    std::cout << "Bubble sort stats:" << std::endl;
+    std::cout << "Count comparison: "<< stat.comparison_count << std::endl;
+    std::cout << "Count copy: "<< stat.copy_count << std::endl << std::endl;
+}
+
+template <typename T>
+void print_comb_stat(std::vector<T>& vect){
+
+    stats stat = comb_sort(vect);
+    std::cout << "Comb sort stats:" << std::endl;
+    std::cout << "Count comparison: "<< stat.comparison_count << std::endl;
+    std::cout << "Count copy: "<< stat.copy_count << std::endl << std::endl;
+}
+
+template <typename T>
+void print_heap_stat(std::vector<T>& vect){
+
+    stats stat = heap_sort(vect);
+    std::cout << "Heap sort stats:" << std::endl;
+    std::cout << "Count comparison: "<< stat.comparison_count << std::endl;
+    std::cout << "Count copy: "<< stat.copy_count << std::endl << std::endl;
+}
+
+
 int main(){
 
-    LinkedList<int> list1(5);
-    std::vector<int> vect1 = list_for_vec(list1.get_head());
+    stats average_bubble;
+    stats average_comb;
+    stats average_heap;
 
-    std::cout<< "Before Bubble: " << list1 << std::endl;
-    stats res1 = bubble_sort(list1.get_head());
-    std::cout<< "After Bubble: " << list1 << std::endl << std::endl;
-    std::cout << "Stats Bubble: " << std::endl << "comparison_count: " << res1.comparison_count << std::endl << "copy_count: " << res1.copy_count  << std::endl << std::endl;
-    
-    std::cout<< "Before Comb: "  << vect1 << std::endl;
-    stats res2 = heap_sort(vect1);
-    std::cout<< "After Comb: " << vect1 << std::endl << std::endl;
-    std::cout << "Stats Comb: " << std::endl << "comparison_count: " << res2.comparison_count << std::endl << "copy_count: " << res2.copy_count  << std::endl << std::endl;
+    std::vector<int> sizes = {1000, 2000, 3000, 5000, 10000, 25000, 50000, 100000};
+    size_t iterat = 100;
+    //2.а
+    for(int size: sizes){
+        std::cout << "Size: " << size << std::endl; 
+        for(size_t j = 0; j<iterat; ++j){
+            std::cout << "Iter: " << j << std::endl;
+            LinkedList<int> list(size);
+            std::vector<int> vect1 = list_for_vec(list.get_head());
+            std::vector<int> vect2 = list_for_vec(list.get_head());
+
+            stats bubble = bubble_sort(list.get_head());
+            stats comb = comb_sort(vect1);
+            stats heap = heap_sort(vect2);
+
+            average_bubble.comparison_count += bubble.comparison_count;
+            average_bubble.copy_count += bubble.copy_count;
+            average_comb.comparison_count += comb.comparison_count;
+            average_comb.copy_count += comb.copy_count;
+            average_heap.comparison_count += heap.comparison_count;
+            average_heap.copy_count += heap.copy_count;
+        }
+        std::cout << "Bubble:" << std::endl << average_bubble.comparison_count/iterat << " " << average_bubble.copy_count/iterat << std::endl;
+        std::cout << "Comb:" << std::endl << average_comb.comparison_count/iterat << " " << average_comb.copy_count/iterat << std::endl;
+        std::cout << "Heap:" << std::endl << average_heap.comparison_count/iterat << " " << average_heap.copy_count/iterat << std::endl;
+    }
+
+    //2.б
+    for(int size: sizes){
+        std::cout << size << std::endl;
+        LinkedList<int> list(size, true);
+        std::vector<int> vect1 = list_for_vec(list.get_head());
+        std::vector<int> vect2 = list_for_vec(list.get_head());
+        
+        print_bubble_stat(list.get_head());
+        print_comb_stat(vect1);
+        print_heap_stat(vect2);
+    }
+
+    for(int size: sizes){
+        std::cout << size << std::endl;
+        LinkedList<int> list(size, -1);
+        std::vector<int> vect1 = list_for_vec(list.get_head());
+        std::vector<int> vect2 = list_for_vec(list.get_head());
+        
+        print_bubble_stat(list.get_head());
+        print_comb_stat(vect1);
+        print_heap_stat(vect2);
+    }
+
+
+
+
 
     return 0;
 }
